@@ -1,0 +1,22 @@
+# Python-related files
+__pycache__/
+*.pyc
+
+.DS_Store
+
+venv/
+.env
+
+# Database file (usually db.sqlite3)
+db.sqlite3
+
+# Environment files
+.env
+
+# Generated static/media files
+/static/
+/media/
+
+# IDE/Editor files (e.g., VS Code or PyCharm)
+.vscode/
+.idea/
