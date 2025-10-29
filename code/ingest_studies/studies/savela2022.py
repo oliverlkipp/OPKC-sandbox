@@ -18,7 +18,7 @@ Temporal variables:
 - Additional time variables in some supplemental files (e.g., `days_4C`, 
   `day_archive`) reflect storage or extraction stability experiments rather than 
   within-host infection progression, and are therefore retained only in 
-  `SI_Fig_3B`–derived tables.
+  `savela2022_swab_SI` and `savela2022_saliva_SI`–derived tables.
 
 Data source:
 ------------
@@ -27,12 +27,12 @@ https://data.caltech.edu/records/20047
 
 Files used:
 ------------
-- Fig_1_panelA_Participant_Swab_data.xlsx
-- Fig_1_panelB_Saliva_Participant_Data.xlsx
-- Fig_2A_data.xlsx through Fig_2G_data.xlsx
-- SI_Fig_3B_data_saliva.xlsx
-- SI_Fig_3B_data_swab.csv
-- Data_Annotation.pdf (metadata reference)
+- savela2022_fig2A_paired.xlsx through savela2022_fig2G_paired.xlsx
+- savela2022_saliva.xlsx
+- savela2022_saliva_SI.xlsx
+- savela2022_swab.xlsx
+- savela2022_swab_SI.csv
+- savela2022_Data_Annotation.pdf (metadata reference)
 
 Notes:
 ------
@@ -57,11 +57,11 @@ if PARENT_DIR not in sys.path:
 
 from schema import enforce_schema, coerce_types
 
-def load_savela2022_infection(data_dir="data/raw/savela2022"):
-    """Load and format longitudinal infection data (Fig 2A–G)."""
+def load_savela2022_infection(data_dir):
+    """Load and format longitudinal infection data (Fig 2A–G paired datasets)."""
     infection_files = [
         f for f in os.listdir(data_dir)
-        if f.startswith("Fig_2") and f.endswith(".xlsx")
+        if f.startswith("savela2022_fig2") and f.endswith(".xlsx")
     ]
     dfs = []
 
@@ -79,7 +79,7 @@ def load_savela2022_infection(data_dir="data/raw/savela2022"):
         "Sample Type": "SampleType",
         "Viral Load N1 (copies/mL)": "ViralLoad_N1",
         "Viral Load N2 (copies/mL)": "ViralLoad_N2",
-    }, inplace=True)
+    }, inplace=True, errors="ignore")
 
     df["StudyID"] = "savela2022"
     df["Units"] = "copies/mL"
@@ -96,11 +96,11 @@ def load_savela2022_infection(data_dir="data/raw/savela2022"):
     return df
 
 
-def load_savela2022_calibration(data_dir="data/raw/savela2022"):
+def load_savela2022_calibration(data_dir):
     """Load calibration curve data (Fig 1A/B)."""
     files = {
-        "swab": "Fig_1_panelA_Participant_Swab_data.xlsx",
-        "saliva": "Fig_1_panelB_Saliva_Participant_Data.xlsx"
+        "swab": "savela2022_swab.xlsx",
+        "saliva": "savela2022_saliva.xlsx"
     }
 
     dfs = []
@@ -132,11 +132,11 @@ def load_savela2022_calibration(data_dir="data/raw/savela2022"):
     return df
 
 
-def load_savela2022_stability(data_dir="data/raw/savela2022"):
+def load_savela2022_stability(data_dir):
     """Optional: load saliva and swab stability (SI Fig 3B)."""
     files = [
-        "SI_Fig_3B_data_saliva.xlsx",
-        "SI_Fig_3B_data_swab.csv"
+        "savela2022_saliva_SI.xlsx",
+        "savela2022_swab_SI.csv"
     ]
     dfs = []
     for f in files:
@@ -161,7 +161,7 @@ def load_and_format(base_dir=None):
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
 
 
-    data_dir = os.path.join(base_dir, "data/raw/savela2022")
+    data_dir = os.path.join(base_dir, "data")
 
     infection = load_savela2022_infection(data_dir)
     calibration = load_savela2022_calibration(data_dir)
