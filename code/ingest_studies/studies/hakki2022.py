@@ -52,10 +52,10 @@ def _safe_log10(x):
         return float("nan")
 
 def load_and_format():
-    # 1) Load Hakki raw CSV placed at: data/raw/hakki2022/trajectories.csv
+    # 1) Load Hakki raw CSV placed at: data/hakki2022.csv
     # Construct path relative to this script — portable across machines
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
-    csv_path = os.path.join(base_dir, "data", "raw", "hakki2022", "trajectories.csv")
+    csv_path = os.path.join(base_dir, "data", "hakki2022.csv")
     df = pd.read_csv(csv_path)
 
     # 2) Keep only the columns needed (defensive: keep only those that exist)
@@ -129,7 +129,7 @@ def load_and_format():
 
     # Keep DaysSincePeak as an extra variable if lab schema allows unknowns; else drop it
     # If enforce_schema drops unknown columns, store in a Notes column.
-
+    print(f"Loaded Hakki et al. 2022 — {len(df)} total rows.")
     return df
 if __name__ == "__main__":
     df = load_and_format()

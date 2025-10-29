@@ -3,9 +3,9 @@ from schema import enforce_schema, coerce_types
 import pandas as pd
 
 def main():
-    df_savela2022 = savela2022.load_and_format()
-    
-    df_savela2022.to_csv("output/test_import.csv", index=False)
+    df_hakki2022 = hakki2022.load_and_format()
+
+    df_hakki2022.to_csv("output/test_import.csv", index=False)
 
 if __name__ == "__main__":
     main()
