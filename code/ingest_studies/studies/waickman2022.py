@@ -46,7 +46,7 @@ if PARENT_DIR not in sys.path:
 from schema import enforce_schema, coerce_types
 
 
-def _load_sheet(base_dir, sheet_name, platform_type, units, platform_tech):
+def _load_sheet(base_dir, sheet_name, platform_type, units, platform_tech, targets):
     xlsx_path = os.path.join(base_dir, "data", "waickman2022_s1.xlsx")
     df_raw = pd.read_excel(xlsx_path, sheet_name=sheet_name)
     df_raw = df_raw.dropna(how="all")
@@ -76,11 +76,11 @@ def _load_sheet(base_dir, sheet_name, platform_type, units, platform_tech):
     df["AgeRng1"] = 20
     df["AgeRng2"] = 45
     df["Subtype"] = "DENV-1 45AZ5"
-    df["PlatformType"] = "RT-qPCR"
+    df["PlatformType"] = platform_type
     df["DOI"] = "10.1126/scitranslmed.abo5019"
-    df["Units"] = "PFU/ml"
-    df["Targets"] = "DENV-1 genome (RNA)"
-    df["PlatformTech"] = "RT-qPCR and Vero cell plaque assay"
+    df["Units"] = units
+    df["Targets"] = targets
+    df["PlatformTech"] = platform_tech
     
     df = enforce_schema(df)
     df = coerce_types(df)
@@ -90,20 +90,22 @@ def _load_sheet(base_dir, sheet_name, platform_type, units, platform_tech):
 def load_and_format(base_dir=None, include_onset=False):
     """
     Load viral-kinetics data from Waickman 2022 (Fig 1A–C).
-    Set include_onset=True to also import Fig 1D (onset summary).
     """
     if base_dir is None:
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
 
     sheets = [
-        ("Figure 1a PCR",    "RT-qPCR",             "GE/ml",   "In-house RT-qPCR"),
-        ("Figure 1b Plaque", "plaque-forming assay","PFU/ml",  "Vero cell plaque assay"),
-        ("Figure 1c",        "ELISA",               "OD (ELISA units)", "NS1 capture ELISA"),
+        ("Figure 1a PCR", "RT-qPCR", "GE/ml", "In-house RT-qPCR",
+         "DENV-1 genome (RNA)"),
+        ("Figure 1b Plaque", "plaque-forming assay","PFU/ml", "Vero cell plaque assay",
+         "Infectious DENV-1 particles"),
+        ("Figure 1c", "ELISA", "OD (ELISA units)", "NS1 capture ELISA",
+         "DENV-1 NS1 protein"),
     ]
 
     dfs = []
-    for sheet, platform_type, units, platform_tech in sheets:
-        dfs.append(_load_sheet(base_dir, sheet, platform_type, units, platform_tech))
+    for sheet, platform_type, units, platform_tech, targets in sheets:
+        dfs.append(_load_sheet(base_dir, sheet, platform_type, units, platform_tech, targets))
 
     df_all = pd.concat(dfs, ignore_index=True)
     return df_all
