@@ -1,4 +1,4 @@
-from studies import ke2022, kissler2023, russell2024, wagstaffe2024, wongnak2024, hakki2022, savela2022
+from studies import ke2022, kissler2023, russell2024, wagstaffe2024, wongnak2024, hakki2022, savela2022, waickman2024
 from schema import enforce_schema, coerce_types
 import pandas as pd
 
